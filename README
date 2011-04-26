@@ -1,0 +1,18 @@
+Twirssi2RSS takes the twirssi-logfile and creates an RSS-feed which contains the 10 most popular links for the current day. 
+
+If you already ran the script earlier it appends the new items to the feed, so old "links of the day" don't get lost. a simple example of the script in action can be found at http://phylomemetic-tree.de/toplinks.xml
+
+Requirements: 
+* A twirssi-logfile, which can be created by using irssi [1] and twirssi [2]
+* The PyRSS2Gen [3] module for Python
+
+Feel invited to play around and optimize the results of this little tool. It's published under the Do What The Fuck You Want To Public License [4].
+
+Cheers,
+Bastian
+
+Links:
+[1] http://irssi.org/
+[2] http://twirssi.com/
+[3] http://www.dalkescientific.com/Python/PyRSS2Gen.html
+[4] http://en.wikipedia.org/wiki/WTFPL
