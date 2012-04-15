@@ -11,31 +11,36 @@ from glob import glob
 # links posted most as a simple RSS-feed. To enable twirssi-logging use "/set twirssi_logfile_path" in irssi.  
 
 # enter the location of the logfile, where the backup shall be stored and where the feed shall be published
-logfile = "/home/bastian/irclogs/twitter"
+logfile = "/home/bastian/irclogs/"
 backup = "/home/bastian/twitter.bak"
 feed_output = "/var/www/toplinks.xml"
 
 def logload(infile):															# open twirssi-logfile, location is specified in line 
-	log = open(infile,"r")
+	date = datetime.date.today()
+	year = str(date.year)
+	if len(str(date.month)) == 1:
+		month = "0"+str(date.month)
+	else:
+		month = str(date.month)
+	if len(str(date.day)) == 1:
+		day = "0"+str(date.day)
+	else:
+		day = str(date.day)
+
+	log = open(infile+year+"/twirssi/twitter."+month+"-"+day+".log","r")
 	tweets = log.readlines()
 	log.close()
 	
 	return tweets
 
-def datefinder(tweets):															# get tweets which include links for the current day
+def datefinder(tweets):															# get urls out of log
 	new_tweets = []
 	expression = re.compile("(http|https)\S*\s")
 	
-	today = datetime.date(2011,2,27).ctime()
-	#today = datetime.date.today().ctime()
-	today = today[:11]+today[20:24]
-	
 	for i in tweets:
-		date = i[:11]+i[20:24]
-		if date == today:
-			result = expression.search(i)
-			if result != None:
-				new_tweets.append(result.group(0).replace("\n",""))
+		result = expression.search(i)
+		if result != None:
+			new_tweets.append(result.group(0).replace("\n",""))
 				
 	return new_tweets
 
@@ -84,10 +89,10 @@ def itemcreator(all_urls):														# create rss-feed-items out of those lin
 				stop = line.find("</title>")
 				heading = line[start:stop]
 		if heading != "":
-			item = PyRSS2Gen.RSSItem(title = heading)	
+			item = PyRSS2Gen.RSSItem(title = heading.decode("utf-8"))	
 		else:
 			item = PyRSS2Gen.RSSItem(title = url[0])
-		item.description = "<b>"+heading+"</b> was posted "+str(url[1])+" times."
+		item.description = "<b>"+heading.decode("utf-8")+"</b> was posted "+str(url[1])+" times."
 		item.link = url[0]
 		item.pubDate = url[2]
 		item.guid = PyRSS2Gen.Guid(url[0])
